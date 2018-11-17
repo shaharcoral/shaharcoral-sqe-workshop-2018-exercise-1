@@ -18,6 +18,7 @@ describe('The javascript parser', () => {
     test13();
     test14();
     test15();
+    test16();
 });
 
 function test1(){
@@ -255,6 +256,20 @@ function  test15() {
         assert.equal(
             JSON.stringify(parseCode('if(x==2){\n' +
                 'x=3;}\n')),
+            JSON.stringify(test)
+        );
+    });
+}
+
+function test16() {
+    it('if with logical exp', () => {
+        let test=[];
+        test.push('1,IfStatement,,x==1 && x==2,');
+        test.push('2,AssignmentExpression,x,,1');
+        assert.equal(
+            JSON.stringify(parseCode('if(x==1 && x==2){\n' +
+                'x=1;\n' +
+                '}')),
             JSON.stringify(test)
         );
     });

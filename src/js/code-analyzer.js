@@ -138,6 +138,8 @@ function primitive_type_more(parseCode) {
         return parseCode.operator + temp(parseCode.argument);
     case 'MemberExpression':
         return parseCode.object.name + '[' + parseCode.property.name + ']';
+    case 'LogicalExpression':
+        return temp(parseCode.left) +' '+ parseCode.operator + ' '+ temp(parseCode.right);
     }
 }
 
