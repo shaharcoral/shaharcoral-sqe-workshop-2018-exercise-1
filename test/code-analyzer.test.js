@@ -19,6 +19,7 @@ describe('The javascript parser', () => {
     test14();
     test15();
     test16();
+    test17();
 });
 
 function test1(){
@@ -95,7 +96,7 @@ function  test6() {
         let test=[];
         test.push('1,FunctionDeclaration,test,,');
         test.push('3,VariableDeclaration,x,,3');
-        test.push('4,ForStatement,,i<=5,');
+        test.push('4,ForStatement,,I=0;i<=5;i=I+1,');
         test.push('5,AssignmentExpression,x,,x+i');
         test.push('8,ReturnStatement,,,x');
         assert.equal(
@@ -117,13 +118,13 @@ function test7() {
         test.push('1,VariableDeclaration,V,,');
         test.push('1,VariableDeclaration,n,,');
         test.push('2,WhileStatement,,low <= high,');
-        test.push('3,ForStatement,,i<=5,');
+        test.push('3,ForStatement,,I=0;i<=5;i++,');
         test.push('4,IfStatement,,x==1,');
         test.push('5,ReturnStatement,,,1');
         test.push('7,else IfStatement,,x>1,');
         test.push('8,AssignmentExpression,x,,x+i');
         test.push('12,ReturnStatement,,,-1');
-        assert.equal(JSON.stringify(parseCode('function binarySearch(X, V, n){\n' + ' while (low <= high) {\n' +'for(I=0;i<=5;i=I+1){\n' +'if(x==1){\n' + 'return 1;\n' +                '}\n' +                'else if(x>1){\n' +                'x=x+i;\n' +                '}\n' +
+        assert.equal(JSON.stringify(parseCode('function binarySearch(X, V, n){\n' + ' while (low <= high) {\n' +'for(I=0;i<=5;i++){\n' +'if(x==1){\n' + 'return 1;\n' +                '}\n' +                'else if(x>1){\n' +                'x=x+i;\n' +                '}\n' +
                 '}\n' +
                 '           }\n' +
                 '    return -1;\n' +
@@ -188,7 +189,7 @@ function  test10() {
 function  test11() {
     it('for exp not in block', () => {
         let test=[];
-        test.push('1,ForStatement,,i<10,');
+        test.push('1,ForStatement,,i=0;i<10;i++,');
         test.push('3,AssignmentExpression,i,,i+1');
 
         assert.equal(
@@ -274,4 +275,23 @@ function test16() {
         );
     });
 }
+
+function  test17() {
+    it('for exp not in block and i=i++', () => {
+        let test=[];
+        test.push('1,ForStatement,,i=0;i<10;i=i++,');
+        test.push('3,AssignmentExpression,i,,i+1');
+
+        assert.equal(
+            JSON.stringify(parseCode(' for(i=0;i<10;i=i++)\n' +
+                '        {\n' +
+                '            i=i+1;\n' +
+                '        }')),
+            JSON.stringify(test)
+        );
+    });
+
+}
+
+
 

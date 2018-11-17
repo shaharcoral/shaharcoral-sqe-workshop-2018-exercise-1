@@ -69,7 +69,7 @@ function  another_cases_in_block(object) {
     case 'ReturnStatement':
         return variableDeclarations.push(object.loc.start.line + ',' + object.type + ',' + ',' + ',' + temp(object.argument));
     case 'ForStatement':
-        variableDeclarations.push(object.loc.start.line + ',' + object.type + ',,' + temp(object.test) + ',');
+        forStateHelp(object);
         temp(object.body);
         return variableDeclarations;
     case 'IfStatement':
@@ -91,7 +91,7 @@ function switch_case_outside_blocks(parseCode) {
     case 'ExpressionStatement':
         return temp(parseCode.expression);
     case 'ForStatement':
-        variableDeclarations.push(parseCode.loc.start.line + ',' + parseCode.type + ',,' + temp(parseCode.test) + ',');
+        forStateHelp(parseCode);
         temp(parseCode.body);
         return variableDeclarations;
     default:
@@ -140,6 +140,18 @@ function primitive_type_more(parseCode) {
         return parseCode.object.name + '[' + parseCode.property.name + ']';
     case 'LogicalExpression':
         return temp(parseCode.left) +' '+ parseCode.operator + ' '+ temp(parseCode.right);
+    case 'UpdateExpression':
+        return temp(parseCode.argument) + parseCode.operator;
+    }
+}
+
+function forStateHelp(parseCode) {
+
+    if(parseCode.update.type==='AssignmentExpression'){
+        variableDeclarations.push(parseCode.loc.start.line + ',' + parseCode.type + ',,' + temp(parseCode.init.left) + parseCode.init.operator+ temp(parseCode.init.right)+';' + temp(parseCode.test) + ';' +temp(parseCode.update.left) +parseCode.update.operator + temp(parseCode.update.right)+',');
+    }
+    else {
+        variableDeclarations.push(parseCode.loc.start.line + ',' + parseCode.type + ',,' + temp(parseCode.init.left) + parseCode.init.operator+ temp(parseCode.init.right)+';' + temp(parseCode.test) + ';' +temp(parseCode.update) +',');
     }
 }
 
